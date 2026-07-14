@@ -1,0 +1,25 @@
+#include "stm32f4xx.h"
+#include "gpio_config.h"
+
+void delay(u32 i)
+{
+	while(i--);
+}
+int main(void)
+{
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOF,ENABLE);	
+    GPIO_InitTypeDef GPIOF_InitStruct;
+    GPIOF_InitStruct.GPIO_Pin = GPIO_Pin_9;
+    GPIOF_InitStruct.GPIO_Mode = GPIO_Mode_OUT;        // 输出模式
+    GPIOF_InitStruct.GPIO_OType = GPIO_OType_PP;       // 推挽输出
+    GPIOF_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;   // 速度
+    GPIOF_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;     // 无上下拉
+    GPIO_Init(GPIOF, &GPIOF_InitStruct);
+    while(1) {
+			GPIO_ResetBits(GPIOF, GPIO_Pin_9); 
+        delay(0xFFFFFF);
+        GPIO_SetBits(GPIOF, GPIO_Pin_9);   
+        delay(0xFFFFFF);
+    }
+}
+//使用库函数模板点亮小灯循环
