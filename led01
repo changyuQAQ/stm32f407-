@@ -1,0 +1,20 @@
+#include "stm32f4xx.h"
+void delay(unsigned int i)
+{
+	while(i--);
+}
+int main(void)
+// GPIOF 时钟使能
+	*(volatile unsigned int *)(0x40023800 + 0x30) |= (1 << 5);
+	// PF9 设置为输出模式
+	*(volatile unsigned int *)(0x40021400 + 0x00) = (1 << (2*9));
+	while(1)
+	{
+		// PF9 输出低电平
+		*(volatile unsigned int *)(0x40021400 + 0x18) = (1 << (16+9));
+		delay(0xFFFFF);
+		// PF9 输出高电平
+		*(volatile unsigned int *)(0x40021400 + 0x18) = (1 << 9);
+		delay(0xFFFFF);
+	}
+//使用寄存器点亮小灯闪烁
