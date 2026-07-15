@@ -1,0 +1,18 @@
+void GPIO_QuickInit_Output(GPIO_TypeDef* GPIOx, u16 GPIO_Pin)
+{
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+    //端口配置输出初始化
+    // 时钟使能：根据端口基地址计算偏移位
+    // GPIOA=0x40020000, GPIOB=0x40020400, ...
+    // (GPIOx - GPIOA_BASE) / 0x400  => 0,1,2...9
+    u32 index = ((u32)GPIOx - GPIOA_BASE) / 0x400;
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA << index, ENABLE);
+    
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin;
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_2MHz;
+    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    GPIO_Init(GPIOx, &GPIO_InitStruct);
+}
+//自定义引脚配置函数
